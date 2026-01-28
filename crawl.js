@@ -19,8 +19,7 @@ async function crawlPage(baseURL, currentURL, pages){
     pages[normalizedCurrentURL] = 1
     console.log(`active crawling: ${currentURL}`)
     
-
-    try {
+    try{
         const resp = await fetch(currentURL)  
 
         if(resp.status > 399){
@@ -40,10 +39,11 @@ async function crawlPage(baseURL, currentURL, pages){
             pages = await crawlPage(baseURL, nextURL, pages)
         }
 
-    } catch (error) {
+    } catch(error){
         console.log(`error in fetch: ${error.message}, on page: ${currentURL}`)
         return 
     }
+    
     return pages
 }
 
