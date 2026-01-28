@@ -4,7 +4,7 @@ My spider is an asynchronous internet bot engineered in TypeScript which is desi
 
 How to run (example): `npm start https://wagslane.dev`
 
-## The Logic of Recursive Crawling
+### The Logic of Recursive Crawling
 
 A recursive crawler follows a "Depth-First" or "Tree-like" approach. You define a function that:
 
@@ -12,8 +12,8 @@ A recursive crawler follows a "Depth-First" or "Tree-like" approach. You define 
 - Filters them (to avoid leaving the site or repeating pages)
 - Calls itself for each of those new links
 
-## Topics I learnt:
+### Topics I learnt:
 
-- Using Jest (JS testing framework) `.test.js` files basically
+- Using Jest (JS testing framework), `.test.js` files basically
 - URL() constructor which returns a newly created URL object 
 - `process.argv`, `process.exit(1)`
