@@ -1,31 +1,50 @@
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 
-async function crawlPage(currentURL) {
-    console.log(`active crawling: ${currentURL}`)
+async function crawlPage(baseURL, currentURL, pages){
     let html = '' 
     
+    const baseURLObj = new URL(baseURL)
+    const currentURLObj = new URL(currentURL)
+    if(baseURLObj.hostname !== currentURLObj.hostname){
+        return pages
+    }
+
+    const normalizedCurrentURL = normalizeURL(currentURL)
+    if(pages[normalizedCurrentURL] > 0){
+        pages[normalizedCurrentURL]++
+        return pages
+    }
+
+    pages[normalizedCurrentURL] = 1
+    console.log(`active crawling: ${currentURL}`)
+    
+
     try {
-        const resp = await fetch(currentURL) 
-        html = await resp.text() 
+        const resp = await fetch(currentURL)  
 
         if(resp.status > 399){
             console.log(`error in fetch with status code: ${resp.status}, on page: ${currentURL}`)
-            return
-        }
+            return pages
+        } 
         const contentType = resp.headers.get("content-type")
-        if(contentType.includes("text/html")){
+        if(!contentType.includes("text/html")){
             console.log(`non html response, content type: ${contentType}, on page: ${currentURL}`)
-            return
-        }
+            return pages
+        } 
 
+        const htmlBody = await resp.text()
+        nextURLs = getURLsFromHTML(htmlBody, baseURL)
+
+        for(const nextURL of nextURLs){
+            pages = await crawlPage(baseURL, nextURL, pages)
+        }
 
     } catch (error) {
         console.log(`error in fetch: ${error.message}, on page: ${currentURL}`)
         return 
     }
-
-    console.log(html)
+    return pages
 }
 
 function getURLsFromHTML(htmlBody, baseURL){
@@ -52,6 +71,7 @@ function getURLsFromHTML(htmlBody, baseURL){
     }
     return urls
 }    
+
 function normalizeURL(urlString){
     const urlObject = new URL(urlString)
     const hostPath = `${urlObject.hostname.toLowerCase()}${urlObject.pathname}`
@@ -59,7 +79,6 @@ function normalizeURL(urlString){
         return hostPath.slice(0,-1)
     return hostPath
 }
-
 
 module.exports = {
     normalizeURL,
