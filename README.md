@@ -1,4 +1,4 @@
-My spider is an asynchronous internet bot engineered in TypeScript which is designed for systematic traversal of the World Wide Web, performing deep-packet inspection of HTML structures to facilitate comprehensive SEO auditing and link-graph mapping
+My spider is an internet bot which recursively traverses websites, extracts and normalizes URLs, and produces crawl reports useful for link analysis.
 
 ![image.jpg](image.jpg)
 
